@@ -1,0 +1,95 @@
+swagger: "2.0"
+info:
+  description: This is the routing swagger file
+  version: "1.0.0"
+  title: REST ENGIE API
+consumes:
+  - "application/json"
+produces:
+  - "application/json"
+
+basePath: "/"
+
+# Paths supported by the server application
+paths:
+  /productionplan:
+    post:
+      summary: Solves the payload.
+      operationId: "production.solve"
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: payload
+          description: The payload to solve.
+          schema:
+            type: object
+            required:
+              - load
+              - fuels
+              - powerplants
+            properties:
+              load:
+                type: integer
+                example: 10
+              fuels:
+                type: object
+                required:
+                  - gas(euro/MWh)
+                  - kerosine(euro/MWh)
+                  - co2(euro/ton)
+                  - wind(%)
+                properties:
+                  gas(euro/MWh):
+                    type: number
+                  kerosine(euro/MWh):
+                    type: number
+                  co2(euro/ton):
+                    type: number
+                  wind(%):
+                    type: number
+                example:
+                  gas(euro/MWh): 12.5
+                  kerosine(euro/MWh): 2.5
+                  co2(euro/ton): 23.5
+                  wind(%): 23
+              powerplants:
+                type: array
+                items:
+                  type: object
+                  required:
+                    - name
+                    - type
+                    - efficiency
+                    - pmin
+                    - pmax
+                  properties:
+                    name:
+                      type: string
+                    type:
+                      type: string
+                    efficiency:
+                      type: number
+                    pmin:
+                      type: integer
+                    pmax:
+                      type: integer
+                  example:
+                    name: name1
+                    type: windturbine
+                    efficiency: 23.5
+                    pmin: 23
+                    pmax: 67
+      responses:
+        200:
+          description: "Successful processed payload"
+          schema:
+            type: array
+            items:
+              type: object
+              properties:
+                name:
+                  type: string
+                p:
+                  type: number
+              example: {"name": "plant1","p":120}
